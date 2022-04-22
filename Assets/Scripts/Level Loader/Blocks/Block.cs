@@ -6,6 +6,9 @@ using System;
 public class Block : MonoBehaviour
 {
     private static int _count = 0;
+    private int _health;
+    private Sprite[] sprites;
+    private SpriteRenderer spriteRenderer;
     public static event Action OnLevelCompleteEvent;
 
     private void OnEnable()
@@ -20,9 +23,28 @@ public class Block : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent(out BallMovement ball))
         {
-            Destroy(gameObject);
+
+            TakeDamage();
             if (_count == 0)
                 OnLevelCompleteEvent?.Invoke();
         }
+    }
+    public void TakeDamage()
+    {
+        _health--;
+        if (_health == 0)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        spriteRenderer.sprite = sprites[_health - 1];
+    }
+    public void SetData(int health, Sprite[] sprites, out Sprite sprite)
+    {
+        _health = health;
+        this.sprites = sprites;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = sprites[_health - 1];
+        sprite = spriteRenderer.sprite;
     }
 }

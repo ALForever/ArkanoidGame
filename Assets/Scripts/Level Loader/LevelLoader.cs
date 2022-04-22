@@ -43,9 +43,9 @@ public class LevelLoader : MonoBehaviour
                 if (lines[i].block[j] != 0)
                 {
                     GameObject block = Instantiate(blockPrefab, blockPoint, Quaternion.identity, transform);
-                    SpriteRenderer spriteR = block.GetComponent<SpriteRenderer>();
-                    spriteR.sprite = typeList.sprites[lines[i].block[j] - 1];
-                    float blockScale = GetBlockScale(spriteR, blockSize);
+                    Block blockData = block.GetComponent<Block>();
+                    blockData.SetData(lines[i].block[j], typeList.sprites, out Sprite sprite);
+                    float blockScale = GetBlockScale(sprite, blockSize);
                     block.transform.localScale = new Vector3(blockScale, blockScale);
                 }
                 blockPoint.x += blockSize;
@@ -55,9 +55,9 @@ public class LevelLoader : MonoBehaviour
         }
     }
 
-    private float GetBlockScale(SpriteRenderer spriteRenderer, float blockSize)
+    private float GetBlockScale(Sprite sprite, float blockSize)
     {
-        return blockSize / (spriteRenderer.sprite.rect.width / spriteRenderer.sprite.pixelsPerUnit);
+        return blockSize / (sprite.rect.width / sprite.pixelsPerUnit);
     }
     private float GetFieldWidth()
     {
